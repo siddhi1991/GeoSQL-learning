@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoSQL - Learn PostgreSQL & PostGIS for Geoscience</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .intro-section {
+            background: white;
+            margin: 2rem auto;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .intro-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        .intro-section p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin: 2rem auto;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .lesson-list {
+            list-style: none;
+        }
+
+        .lesson-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .lesson-item:hover {
+            background: #ecf0f1;
+            border-left-color: #3498db;
+        }
+
+        .lesson-item.active {
+            background: #3498db;
+            color: white;
+            border-left-color: #2980b9;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .lesson-content h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .lesson-content h3 {
+            color: #34495e;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .exercise-box {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .exercise-box h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .schema-info {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .query-editor {
+            margin: 1rem 0;
+        }
+
+        .query-editor textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            border: 2px solid #dee2e6;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        .query-editor textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .button-group {
+            margin: 1rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .results-area {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .results-area h4 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .code {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1rem;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+
+        .hint {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #c3e6cb;
+            margin: 1rem 0;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid #f5c6cb;
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🌍 GeoSQL </h1>
+            <p class="subtitle">Master PostgreSQL & PostGIS through Geoscience Applications</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="intro-section">
+            <h2>Welcome to GeoSQL </h2>
+            <p>
+                This interactive learning platform is designed to teach you PostgreSQL and PostGIS through real-world geoscience applications. 
+                Whether you're a geologist, environmental scientist, GIS analyst, or simply curious about spatial databases, this course will 
+                guide you through practical examples using geological, geophysical, and environmental data.
+            </p>
+            <p>
+                <strong>What you'll learn:</strong> You'll master SQL fundamentals including data querying, filtering, aggregation, and joins. 
+                Then you'll dive into PostGIS to work with spatial data, perform geometric operations, analyze earthquake patterns, map mineral 
+                deposits, track environmental changes, and much more. Each lesson builds on the previous one, taking you from basic SELECT 
+                statements to complex spatial analyses.
+            </p>
+            <p>
+                <strong>Our approach:</strong> We use a fictional geoscience database containing tables for earthquake events, rock samples, 
+                mineral deposits, seismic stations, geological formations, and environmental monitoring sites. Through hands-on exercises, 
+                you'll answer real questions that geoscientists face daily.
+            </p>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h3>📊 Real Data Scenarios</h3>
+                    <p>Work with realistic geoscience datasets including earthquakes, rock samples, and mineral deposits</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🗺️ PostGIS Integration</h3>
+                    <p>Learn spatial database concepts with geographic and geometric operations</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💡 Progressive Learning</h3>
+                    <p>Start with basics and advance to complex queries and spatial analysis</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 Practical Exercises</h3>
+                    <p>Apply your knowledge immediately with guided exercises and solutions</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <h3>Lessons</h3>
+                <ul class="lesson-list">
+                    <li class="lesson-item active" data-lesson="intro">Introduction & Setup</li>
+                    <li class="lesson-item" data-lesson="basic-select">Basic SELECT Queries</li>
+                    <li class="lesson-item" data-lesson="filtering">Filtering with WHERE</li>
+                    <li class="lesson-item" data-lesson="aggregation">Aggregation Functions</li>
+                    <li class="lesson-item" data-lesson="joins">Joining Tables</li>
+                    <li class="lesson-item" data-lesson="spatial-intro">PostGIS Introduction</li>
+                    <li class="lesson-item" data-lesson="spatial-queries">Spatial Queries</li>
+                    <li class="lesson-item" data-lesson="spatial-analysis">Advanced Spatial Analysis</li>
+                </ul>
+            </aside>
+
+            <main class="content-area">
+                <div id="lesson-content"></div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const lessons = {
+            intro: {
+                title: 'Introduction & Database Schema',
+                content: `
+                    <h2>Database Schema Overview</h2>
+                    <p>Our geoscience database contains the following tables that you'll work with throughout this course:</p>
+
+                    <h3>Table: earthquakes</h3>
+                    <div class="schema-info">
+                        <strong>Description:</strong> Records of seismic events worldwide
+                        <br><strong>Columns:</strong>
+                        <ul>
+                            <li><code>id</code> (integer) - Unique earthquake identifier</li>
+                            <li><code>event_date</code> (timestamp) - Date and time of occurrence</li>
+                            <li><code>magnitude</code> (decimal) - Richter scale magnitude</li>
+                            <li><code>depth_km</code> (decimal) - Depth below surface in kilometers</li>
+                            <li><code>location</code> (text) - Descriptive location name</li>
+                            <li><code>latitude</code> (decimal) - Geographic latitude</li>
+                            <li><code>longitude</code> (decimal) - Geographic longitude</li>
+                            <li><code>geom</code> (geometry) - PostGIS point geometry</li>
+                        </ul>
+                    </div>
+
+                    <h3>Table: rock_samples</h3>
+                    <div class="schema-info">
+                        <strong>Description:</strong> Geological rock sample collection data
+                        <br><strong>Columns:</strong>
+                        <ul>
+                            <li><code>sample_id</code> (text) - Sample identifier (e.g., 'RS-001')</li>
+                            <li><code>rock_type</code> (text) - Classification (granite, basalt, limestone, etc.)</li>
+                            <li><code>age_million_years</code> (decimal) - Estimated age in millions of years</li>
+                            <li><code>collection_date</code> (date) - Date collected</li>
+                            <li><code>latitude</code> (decimal) - Collection site latitude</li>
+                            <li><code>longitude</code> (decimal) - Collection site longitude</li>
+                            <li><code>formation_id</code> (integer) - Foreign key to geological_formations</li>
+                        </ul>
+                    </div>
+
+                    <h3>Table: mineral_deposits</h3>
+                    <div class="schema-info">
+                        <strong>Description:</strong> Known mineral deposit locations
+                        <br><strong>Columns:</strong>
+                        <ul>
+                            <li><code>deposit_id</code> (integer) - Unique deposit identifier</li>
+                            <li><code>mineral_name</code> (text) - Primary mineral (gold, copper, iron, etc.)</li>
+                            <li><code>deposit_type</code> (text) - Type of deposit (vein, placer, porphyry)</li>
+                            <li><code>estimated_volume_m3</code> (decimal) - Estimated volume in cubic meters</li>
+                            <li><code>site_name</code> (text) - Location name</li>
+                            <li><code>geom</code> (geometry) - PostGIS polygon geometry</li>
+                        </ul>
+                    </div>
+
+                    <p>Ready to start querying? Click on "Basic SELECT Queries" in the sidebar to begin!</p>
+                `
+            },
+            'basic-select': {
+                title: 'Basic SELECT Queries',
+                content: `
+                    <h2>Basic SELECT Queries</h2>
+                    <p>The SELECT statement is the foundation of all SQL queries. It allows you to retrieve data from database tables.</p>
+
+                    <h3>Syntax</h3>
+                    <div class="code">SELECT column1, column2, ...
+FROM table_name;</div>
+
+                    <h3>Example: View All Earthquakes</h3>
+                    <div class="code">SELECT * FROM earthquakes;</div>
+                    <p>The asterisk (*) retrieves all columns from the table.</p>
+
+                    <h3>Example: Specific Columns</h3>
+                    <div class="code">SELECT event_date, magnitude, location 
+FROM earthquakes;</div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 1: Your First Query</h4>
+                        <p><strong>Task:</strong> Write a query to retrieve the sample_id, rock_type, and age_million_years from the rock_samples table.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query1" placeholder="Write your SQL query here...">SELECT sample_id, rock_type, age_million_years
+FROM rock_samples;</textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query1', 'result1')">Run Query</button>
+                            <button class="btn-secondary" onclick="showHint('hint1')">Show Hint</button>
+                            <button class="btn-success" onclick="showSolution('query1', 'SELECT sample_id, rock_type, age_million_years\\nFROM rock_samples;')">Show Solution</button>
+                        </div>
+
+                        <div id="hint1" class="hint" style="display:none;">
+                            <strong>Hint:</strong> Remember to list the column names separated by commas, then specify the table name after FROM.
+                        </div>
+
+                        <div id="result1" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>sample_id</th>
+                                        <th>rock_type</th>
+                                        <th>age_million_years</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>RS-001</td><td>Granite</td><td>450.5</td></tr>
+                                    <tr><td>RS-002</td><td>Basalt</td><td>65.2</td></tr>
+                                    <tr><td>RS-003</td><td>Limestone</td><td>300.0</td></tr>
+                                    <tr><td>RS-004</td><td>Sandstone</td><td>180.7</td></tr>
+                                    <tr><td>RS-005</td><td>Shale</td><td>420.3</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Excellent! You've successfully retrieved specific columns from the rock_samples table.</div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 2: Mineral Deposits</h4>
+                        <p><strong>Task:</strong> Retrieve all columns from the mineral_deposits table to see what mineral resources are recorded.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query2" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query2', 'result2')">Run Query</button>
+                            <button class="btn-success" onclick="showSolution('query2', 'SELECT *\\nFROM mineral_deposits;')">Show Solution</button>
+                        </div>
+
+                        <div id="result2" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>deposit_id</th>
+                                        <th>mineral_name</th>
+                                        <th>deposit_type</th>
+                                        <th>estimated_volume_m3</th>
+                                        <th>site_name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>1</td><td>Gold</td><td>Vein</td><td>50000</td><td>Sierra Nevada Mine</td></tr>
+                                    <tr><td>2</td><td>Copper</td><td>Porphyry</td><td>2500000</td><td>Andes Deposit</td></tr>
+                                    <tr><td>3</td><td>Iron</td><td>Banded Iron Formation</td><td>10000000</td><td>Superior Range</td></tr>
+                                    <tr><td>4</td><td>Silver</td><td>Vein</td><td>35000</td><td>Rocky Mountain Lode</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Perfect! You can now see all the mineral deposit records in the database.</div>
+                        </div>
+                    </div>
+                `
+            },
+            filtering: {
+                title: 'Filtering Data with WHERE',
+                content: `
+                    <h2>Filtering Data with WHERE</h2>
+                    <p>The WHERE clause allows you to filter records based on specific conditions, returning only the data that meets your criteria.</p>
+
+                    <h3>Syntax</h3>
+                    <div class="code">SELECT column1, column2
+FROM table_name
+WHERE condition;</div>
+
+                    <h3>Common Operators</h3>
+                    <ul>
+                        <li><code>=</code> Equal to</li>
+                        <li><code>></code> Greater than</li>
+                        <li><code>>=</code> Greater than or equal to</li>
+                        <li><code><</code> Less than</li>
+                        <li><code><=</code> Less than or equal to</li>
+                        <li><code>!=</code> or <code><></code> Not equal to</li>
+                        <li><code>BETWEEN</code> Between a range</li>
+                        <li><code>LIKE</code> Pattern matching</li>
+                        <li><code>IN</code> Match any value in a list</li>
+                    </ul>
+
+                    <h3>Example: Major Earthquakes</h3>
+                    <div class="code">SELECT event_date, magnitude, location
+FROM earthquakes
+WHERE magnitude >= 7.0;</div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 1: Recent Earthquakes</h4>
+                        <p><strong>Task:</strong> Find all earthquakes with a magnitude greater than 6.5. Display the location, magnitude, and depth.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query3" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query3', 'result3')">Run Query</button>
+                            <button class="btn-secondary" onclick="showHint('hint3')">Show Hint</button>
+                            <button class="btn-success" onclick="showSolution('query3', 'SELECT location, magnitude, depth_km\\nFROM earthquakes\\nWHERE magnitude > 6.5;')">Show Solution</button>
+                        </div>
+
+                        <div id="hint3" class="hint" style="display:none;">
+                            <strong>Hint:</strong> Use the WHERE clause with the greater than operator (>) to filter by magnitude.
+                        </div>
+
+                        <div id="result3" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>location</th>
+                                        <th>magnitude</th>
+                                        <th>depth_km</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Pacific Ocean, Japan</td><td>8.9</td><td>24.4</td></tr>
+                                    <tr><td>Chile Coast</td><td>8.2</td><td>15.0</td></tr>
+                                    <tr><td>Nepal</td><td>7.8</td><td>8.2</td></tr>
+                                    <tr><td>Indonesia</td><td>7.5</td><td>30.0</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Great work! You've filtered the earthquakes to show only significant seismic events.</div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 2: Ancient Rock Samples</h4>
+                        <p><strong>Task:</strong> Find all granite rock samples that are older than 400 million years. Show the sample_id, rock_type, and age.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query4" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query4', 'result4')">Run Query</button>
+                            <button class="btn-success" onclick="showSolution('query4', 'SELECT sample_id, rock_type, age_million_years\\nFROM rock_samples\\nWHERE rock_type = \\'Granite\\' AND age_million_years > 400;')">Show Solution</button>
+                        </div>
+
+                        <div id="result4" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>sample_id</th>
+                                        <th>rock_type</th>
+                                        <th>age_million_years</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>RS-001</td><td>Granite</td><td>450.5</td></tr>
+                                    <tr><td>RS-009</td><td>Granite</td><td>520.0</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Excellent! You've combined multiple conditions using AND to find specific rock samples.</div>
+                        </div>
+                    </div>
+                `
+            },
+            aggregation: {
+                title: 'Aggregation Functions',
+                content: `
+                    <h2>Aggregation Functions</h2>
+                    <p>Aggregation functions perform calculations on a set of values and return a single value. They're essential for statistical analysis of geoscience data.</p>
+
+                    <h3>Common Aggregate Functions</h3>
+                    <ul>
+                        <li><code>COUNT()</code> - Count the number of rows</li>
+                        <li><code>AVG()</code> - Calculate the average value</li>
+                        <li><code>SUM()</code> - Calculate the total sum</li>
+                        <li><code>MIN()</code> - Find the minimum value</li>
+                        <li><code>MAX()</code> - Find the maximum value</li>
+                    </ul>
+
+                    <h3>GROUP BY Clause</h3>
+                    <p>The GROUP BY clause groups rows with the same values into summary rows.</p>
+
+                    <div class="code">SELECT rock_type, COUNT(*) as sample_count, AVG(age_million_years) as avg_age
+FROM rock_samples
+GROUP BY rock_type;</div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 1: Earthquake Statistics</h4>
+                        <p><strong>Task:</strong> Calculate the average magnitude, maximum magnitude, and total count of all earthquakes in the database.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query5" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query5', 'result5')">Run Query</button>
+                            <button class="btn-secondary" onclick="showHint('hint5')">Show Hint</button>
+                            <button class="btn-success" onclick="showSolution('query5', 'SELECT COUNT(*) as total_earthquakes,\\n       AVG(magnitude) as avg_magnitude,\\n       MAX(magnitude) as max_magnitude\\nFROM earthquakes;')">Show Solution</button>
+                        </div>
+
+                        <div id="hint5" class="hint" style="display:none;">
+                            <strong>Hint:</strong> Use COUNT(*), AVG(magnitude), and MAX(magnitude) in your SELECT statement. You can use AS to create column aliases.
+                        </div>
+
+                        <div id="result5" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>total_earthquakes</th>
+                                        <th>avg_magnitude</th>
+                                        <th>max_magnitude</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>847</td><td>5.3</td><td>8.9</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Perfect! You've used aggregate functions to get statistical insights from earthquake data.</div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 2: Minerals by Deposit Type</h4>
+                        <p><strong>Task:</strong> Group mineral deposits by deposit_type and show the count of deposits and total estimated volume for each type.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query6" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query6', 'result6')">Run Query</button>
+                            <button class="btn-success" onclick="showSolution('query6', 'SELECT deposit_type,\\n       COUNT(*) as deposit_count,\\n       SUM(estimated_volume_m3) as total_volume\\nFROM mineral_deposits\\nGROUP BY deposit_type;')">Show Solution</button>
+                        </div>
+
+                        <div id="result6" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>deposit_type</th>
+                                        <th>deposit_count</th>
+                                        <th>total_volume</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Vein</td><td>2</td><td>85000</td></tr>
+                                    <tr><td>Porphyry</td><td>1</td><td>2500000</td></tr>
+                                    <tr><td>Banded Iron Formation</td><td>1</td><td>10000000</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Excellent! You've grouped data and performed aggregations to analyze mineral deposit patterns.</div>
+                        </div>
+                    </div>
+                `
+            },
+            joins: {
+                title: 'Joining Tables',
+                content: `
+                    <h2>Joining Tables</h2>
+                    <p>Joins allow you to combine rows from two or more tables based on related columns, enabling you to analyze relationships between different datasets.</p>
+
+                    <h3>Types of Joins</h3>
+                    <ul>
+                        <li><strong>INNER JOIN</strong> - Returns records that have matching values in both tables</li>
+                        <li><strong>LEFT JOIN</strong> - Returns all records from the left table, and matched records from the right</li>
+                        <li><strong>RIGHT JOIN</strong> - Returns all records from the right table, and matched records from the left</li>
+                        <li><strong>FULL OUTER JOIN</strong> - Returns all records when there's a match in either table</li>
+                    </ul>
+
+                    <h3>Syntax</h3>
+                    <div class="code">SELECT columns
+FROM table1
+INNER JOIN table2 ON table1.column = table2.column;</div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise: Rock Samples with Formation Data</h4>
+                        <p><strong>Scenario:</strong> We have a geological_formations table with information about rock formations. Join it with rock_samples to see which formation each sample belongs to.</p>
+                        
+                        <p><strong>Task:</strong> Write a query that shows sample_id, rock_type, and the formation_name from the geological_formations table.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query7" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query7', 'result7')">Run Query</button>
+                            <button class="btn-secondary" onclick="showHint('hint7')">Show Hint</button>
+                            <button class="btn-success" onclick="showSolution('query7', 'SELECT rs.sample_id, rs.rock_type, gf.formation_name\\nFROM rock_samples rs\\nINNER JOIN geological_formations gf\\n  ON rs.formation_id = gf.formation_id;')">Show Solution</button>
+                        </div>
+
+                        <div id="hint7" class="hint" style="display:none;">
+                            <strong>Hint:</strong> Use INNER JOIN to connect rock_samples with geological_formations using the formation_id column. Use table aliases (rs, gf) to make your query more readable.
+                        </div>
+
+                        <div id="result7" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>sample_id</th>
+                                        <th>rock_type</th>
+                                        <th>formation_name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>RS-001</td><td>Granite</td><td>Precambrian Shield</td></tr>
+                                    <tr><td>RS-002</td><td>Basalt</td><td>Columbia River Basalt Group</td></tr>
+                                    <tr><td>RS-003</td><td>Limestone</td><td>Madison Formation</td></tr>
+                                    <tr><td>RS-004</td><td>Sandstone</td><td>Navajo Sandstone</td></tr>
+                                    <tr><td>RS-005</td><td>Shale</td><td>Pierre Shale</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Excellent work! You've successfully joined two tables to combine geological data.</div>
+                        </div>
+                    </div>
+
+                    <p><strong>Key Concept:</strong> Joins are essential in geoscience databases where data is normalized across multiple tables. You'll often need to join earthquake data with station data, rock samples with formations, or mineral deposits with geological units.</p>
+                `
+            },
+            'spatial-intro': {
+                title: 'PostGIS Introduction',
+                content: `
+                    <h2>Introduction to PostGIS</h2>
+                    <p>PostGIS is a spatial database extender for PostgreSQL that adds support for geographic objects, allowing you to run location queries in SQL. This is crucial for geoscience applications where spatial relationships matter.</p>
+
+                    <h3>Why PostGIS for Geoscience?</h3>
+                    <ul>
+                        <li>Analyze spatial relationships between earthquakes and fault lines</li>
+                        <li>Calculate distances between seismic stations</li>
+                        <li>Find all rock samples within a specific region</li>
+                        <li>Determine which mineral deposits fall within geological formations</li>
+                        <li>Create buffer zones around environmental monitoring sites</li>
+                    </ul>
+
+                    <h3>Geometry Types</h3>
+                    <div class="schema-info">
+                        <ul>
+                            <li><strong>POINT</strong> - A single location (earthquake epicenter, sample location)</li>
+                            <li><strong>LINESTRING</strong> - A series of connected points (fault lines, seismic profiles)</li>
+                            <li><strong>POLYGON</strong> - An enclosed area (geological formations, mineral deposits)</li>
+                            <li><strong>MULTIPOINT</strong> - Collection of points (multiple sample locations)</li>
+                            <li><strong>MULTILINESTRING</strong> - Multiple lines (road networks)</li>
+                            <li><strong>MULTIPOLYGON</strong> - Multiple polygons (island groups, discontinuous formations)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Basic PostGIS Functions</h3>
+                    <div class="code">-- Create a point geometry
+ST_MakePoint(longitude, latitude)
+
+-- Calculate distance between two points (in meters)
+ST_Distance(geom1, geom2)
+
+-- Check if a point is within a polygon
+ST_Within(point_geom, polygon_geom)
+
+-- Get the area of a polygon (in square meters)
+ST_Area(polygon_geom)
+
+-- Create a buffer around a geometry
+ST_Buffer(geom, distance)</div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise: Creating Point Geometries</h4>
+                        <p><strong>Task:</strong> Select earthquakes and create point geometries from their latitude and longitude coordinates. Display the location name and the geometry.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query8" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query8', 'result8')">Run Query</button>
+                            <button class="btn-secondary" onclick="showHint('hint8')">Show Hint</button>
+                            <button class="btn-success" onclick="showSolution('query8', 'SELECT location,\\n       ST_MakePoint(longitude, latitude) as geom\\nFROM earthquakes\\nLIMIT 5;')">Show Solution</button>
+                        </div>
+
+                        <div id="hint8" class="hint" style="display:none;">
+                            <strong>Hint:</strong> Use ST_MakePoint() function with longitude and latitude. Remember: ST_MakePoint takes (longitude, latitude) not (latitude, longitude)!
+                        </div>
+
+                        <div id="result8" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>location</th>
+                                        <th>geom</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Pacific Ocean, Japan</td><td>POINT(142.369 38.297)</td></tr>
+                                    <tr><td>Chile Coast</td><td>POINT(-71.654 -33.240)</td></tr>
+                                    <tr><td>Nepal</td><td>POINT(84.708 28.147)</td></tr>
+                                    <tr><td>California, USA</td><td>POINT(-122.419 37.775)</td></tr>
+                                    <tr><td>Indonesia</td><td>POINT(119.841 -0.256)</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Great! You've created spatial point geometries from coordinate data.</div>
+                        </div>
+                    </div>
+
+                    <p><strong>Next Steps:</strong> Now that you understand basic PostGIS concepts, we'll explore spatial queries to answer real geoscience questions.</p>
+                `
+            },
+            'spatial-queries': {
+                title: 'Spatial Queries',
+                content: `
+                    <h2>Spatial Queries with PostGIS</h2>
+                    <p>Now we'll use PostGIS functions to answer spatial questions about our geoscience data.</p>
+
+                    <h3>Distance Calculations</h3>
+                    <p>One of the most common spatial queries is calculating distances between features.</p>
+
+                    <div class="code">-- Find earthquakes within 100km of a specific point
+SELECT location, magnitude,
+       ST_Distance(
+           geom,
+           ST_MakePoint(longitude, latitude)::geography
+       ) / 1000 as distance_km
+FROM earthquakes
+WHERE ST_Distance(
+    geom,
+    ST_MakePoint(target_lon, target_lat)::geography
+) < 100000
+ORDER BY distance_km;</div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 1: Nearby Earthquakes</h4>
+                        <p><strong>Scenario:</strong> A seismic monitoring station is located at coordinates (140.0°E, 35.0°N) in Japan. Find all earthquakes within 500 kilometers of this station.</p>
+                        
+                        <p><strong>Task:</strong> Write a query that shows the location, magnitude, and distance from the station for earthquakes within 500km. Order by distance.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query9" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query9', 'result9')">Run Query</button>
+                            <button class="btn-secondary" onclick="showHint('hint9')">Show Hint</button>
+                            <button class="btn-success" onclick="showSolution('query9', 'SELECT location, magnitude,\\n       ST_Distance(\\n           geom::geography,\\n           ST_MakePoint(140.0, 35.0)::geography\\n       ) / 1000 as distance_km\\nFROM earthquakes\\nWHERE ST_Distance(\\n    geom::geography,\\n    ST_MakePoint(140.0, 35.0)::geography\\n) < 500000\\nORDER BY distance_km;')">Show Solution</button>
+                        </div>
+
+                        <div id="hint9" class="hint" style="display:none;">
+                            <strong>Hint:</strong> Use ST_Distance with ::geography for accurate distances in meters. Divide by 1000 to get kilometers. The WHERE clause filters by 500000 meters (500km).
+                        </div>
+
+                        <div id="result9" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>location</th>
+                                        <th>magnitude</th>
+                                        <th>distance_km</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Tokyo Bay</td><td>5.2</td><td>45.3</td></tr>
+                                    <tr><td>Chiba Prefecture</td><td>4.8</td><td>127.6</td></tr>
+                                    <tr><td>Ibaraki</td><td>5.0</td><td>234.1</td></tr>
+                                    <tr><td>Fukushima Coast</td><td>6.1</td><td>398.5</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Excellent! You've performed a proximity analysis to find nearby seismic events.</div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 2: Mineral Deposit Areas</h4>
+                        <p><strong>Task:</strong> Calculate the area in square kilometers of each mineral deposit. Show the site name, mineral name, and area, ordered by area (largest first).</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query10" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query10', 'result10')">Run Query</button>
+                            <button class="btn-success" onclick="showSolution('query10', 'SELECT site_name, mineral_name,\\n       ST_Area(geom::geography) / 1000000 as area_km2\\nFROM mineral_deposits\\nORDER BY area_km2 DESC;')">Show Solution</button>
+                        </div>
+
+                        <div id="result10" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>site_name</th>
+                                        <th>mineral_name</th>
+                                        <th>area_km2</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Superior Range</td><td>Iron</td><td>450.7</td></tr>
+                                    <tr><td>Andes Deposit</td><td>Copper</td><td>125.3</td></tr>
+                                    <tr><td>Rocky Mountain Lode</td><td>Silver</td><td>12.8</td></tr>
+                                    <tr><td>Sierra Nevada Mine</td><td>Gold</td><td>8.5</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Perfect! You've calculated spatial areas using PostGIS geometry functions.</div>
+                        </div>
+                    </div>
+
+                    <p><strong>Key Concept:</strong> The ::geography cast is important for accurate distance and area calculations on Earth's curved surface. Without it, PostGIS treats coordinates as if on a flat plane.</p>
+                `
+            },
+            'spatial-analysis': {
+                title: 'Advanced Spatial Analysis',
+                content: `
+                    <h2>Advanced Spatial Analysis</h2>
+                    <p>Let's combine spatial functions with SQL operations to perform complex geoscience analyses.</p>
+
+                    <h3>Spatial Joins</h3>
+                    <p>Find which features from one table intersect or are contained within features from another table.</p>
+
+                    <div class="code">-- Find rock samples within mineral deposit areas
+SELECT rs.sample_id, rs.rock_type, md.site_name, md.mineral_name
+FROM rock_samples rs
+JOIN mineral_deposits md
+  ON ST_Within(
+      ST_MakePoint(rs.longitude, rs.latitude),
+      md.geom
+  );</div>
+
+                    <h3>Buffer Analysis</h3>
+                    <p>Create buffer zones around features to analyze proximity.</p>
+
+                    <div class="code">-- Create 50km buffer around earthquake epicenters
+SELECT location, magnitude,
+       ST_Buffer(geom::geography, 50000) as buffer_geom
+FROM earthquakes
+WHERE magnitude > 7.0;</div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 1: Earthquake Clustering</h4>
+                        <p><strong>Task:</strong> Find clusters of earthquakes by counting how many earthquakes occurred within 200km of each major (magnitude >= 7.0) earthquake. Show the main earthquake location, its magnitude, and the count of nearby earthquakes.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query11" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query11', 'result11')">Run Query</button>
+                            <button class="btn-secondary" onclick="showHint('hint11')">Show Hint</button>
+                            <button class="btn-success" onclick="showSolution('query11', 'SELECT e1.location as main_earthquake,\\n       e1.magnitude,\\n       COUNT(e2.id) as nearby_count\\nFROM earthquakes e1\\nLEFT JOIN earthquakes e2\\n  ON ST_Distance(\\n      e1.geom::geography,\\n      e2.geom::geography\\n  ) < 200000\\n  AND e1.id != e2.id\\nWHERE e1.magnitude >= 7.0\\nGROUP BY e1.id, e1.location, e1.magnitude\\nORDER BY nearby_count DESC;')">Show Solution</button>
+                        </div>
+
+                        <div id="hint11" class="hint" style="display:none;">
+                            <strong>Hint:</strong> Use a self-join on the earthquakes table. Join where distance < 200000 meters and e1.id != e2.id to avoid counting an earthquake with itself. Use COUNT and GROUP BY.
+                        </div>
+
+                        <div id="result11" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>main_earthquake</th>
+                                        <th>magnitude</th>
+                                        <th>nearby_count</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Pacific Ocean, Japan</td><td>8.9</td><td>147</td></tr>
+                                    <tr><td>Chile Coast</td><td>8.2</td><td>89</td></tr>
+                                    <tr><td>Nepal</td><td>7.8</td><td>34</td></tr>
+                                    <tr><td>Indonesia</td><td>7.5</td><td>56</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Outstanding! You've performed spatial clustering analysis to identify seismically active zones.</div>
+                        </div>
+                    </div>
+
+                    <div class="exercise-box">
+                        <h4>Exercise 2: Geological Formation Coverage</h4>
+                        <p><strong>Task:</strong> For each geological formation, calculate what percentage of mineral deposits (by area) fall within it. Show formation name, total deposit area within it, and percentage of total mineral deposit area.</p>
+                        
+                        <div class="query-editor">
+                            <textarea id="query12" placeholder="Write your SQL query here..."></textarea>
+                        </div>
+                        
+                        <div class="button-group">
+                            <button class="btn-primary" onclick="runQuery('query12', 'result12')">Run Query</button>
+                            <button class="btn-success" onclick="showSolution('query12', 'SELECT gf.formation_name,\\n       SUM(ST_Area(ST_Intersection(md.geom, gf.geom)::geography)) / 1000000 as deposit_area_km2,\\n       ROUND(\\n         100.0 * SUM(ST_Area(ST_Intersection(md.geom, gf.geom)::geography)) /\\n         (SELECT SUM(ST_Area(geom::geography)) FROM mineral_deposits),\\n         2\\n       ) as percentage\\nFROM geological_formations gf\\nJOIN mineral_deposits md\\n  ON ST_Intersects(gf.geom, md.geom)\\nGROUP BY gf.formation_name\\nORDER BY deposit_area_km2 DESC;')">Show Solution</button>
+                        </div>
+
+                        <div id="result12" class="results-area" style="display:none;">
+                            <h4>Query Results</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>formation_name</th>
+                                        <th>deposit_area_km2</th>
+                                        <th>percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>Precambrian Shield</td><td>342.6</td><td>57.4%</td></tr>
+                                    <tr><td>Andean Batholith</td><td>125.3</td><td>21.0%</td></tr>
+                                    <tr><td>Superior Craton</td><td>108.1</td><td>18.1%</td></tr>
+                                    <tr><td>Sierra Nevada Plutonic</td><td>20.7</td><td>3.5%</td></tr>
+                                </tbody>
+                            </table>
+                            <div class="success-message">✓ Exceptional work! You've combined spatial intersections with aggregation to analyze geological relationships.</div>
+                        </div>
+                    </div>
+
+                    <p><strong>Congratulations!</strong> You've completed the advanced spatial analysis section. You now have the skills to perform sophisticated geoscience analyses using PostgreSQL and PostGIS, including distance calculations, spatial joins, buffer analysis, and complex spatial aggregations.</p>
+                `
+            }
+        };
+
+        function loadLesson(lessonId) {
+            const lesson = lessons[lessonId];
+            const contentDiv = document.getElementById('lesson-content');
+            contentDiv.innerHTML = lesson.content;
+
+            // Update active lesson in sidebar
+            document.querySelectorAll('.lesson-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-lesson="${lessonId}"]`).classList.add('active');
+
+            // Scroll to top of content
+            contentDiv.scrollTop = 0;
+        }
+
+        function runQuery(queryId, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function showHint(hintId) {
+            const hintDiv = document.getElementById(hintId);
+            hintDiv.style.display = hintDiv.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showSolution(queryId, solution) {
+            document.getElementById(queryId).value = solution;
+        }
+
+        // Event listeners
+        document.querySelectorAll('.lesson-item').forEach(item => {
+            item.addEventListener('click', function() {
+                loadLesson(this.dataset.lesson);
+            });
+        });
+
+        // Load initial lesson
+        loadLesson('intro');
+    </script>
+</body>
+</html>
