@@ -464,18 +464,6 @@
 
                     <h3>Table: earthquakes</h3>
                     <div class="schema-info">
-                        <strong>Description:</strong> Records of seismic events worldwide
-                        <br><strong>Columns:</strong>
-                        <ul>
-                            <li><code>id</code> (integer) - Unique earthquake identifier</li>
-                            <li><code>event_date</code> (timestamp) - Date and time of occurrence</li>
-                            <li><code>magnitude</code> (decimal) - Richter scale magnitude</li>
-                            <li><code>depth_km</code> (decimal) - Depth below surface in kilometers</li>
-                            <li><code>location</code> (text) - Descriptive location name</li>
-                            <li><code>latitude</code> (decimal) - Geographic latitude</li>
-                            <li><code>longitude</code> (decimal) - Geographic longitude</li>
-                            <li><code>geom</code> (geometry) - PostGIS point geometry</li>
-                        </ul>
                         <strong style="display: block; margin-top: 1rem;">Sample Data:</strong>
                         <table style="margin-top: 0.5rem;">
                             <thead>
@@ -523,16 +511,6 @@
                     <h3>Table: rock_samples</h3>
                     <div class="schema-info">
                         <strong>Description:</strong> Geological rock sample collection data
-                        <br><strong>Columns:</strong>
-                        <ul>
-                            <li><code>sample_id</code> (text) - Sample identifier (e.g., 'RS-001')</li>
-                            <li><code>rock_type</code> (text) - Classification (granite, basalt, limestone, etc.)</li>
-                            <li><code>age_million_years</code> (decimal) - Estimated age in millions of years</li>
-                            <li><code>collection_date</code> (date) - Date collected</li>
-                            <li><code>latitude</code> (decimal) - Collection site latitude</li>
-                            <li><code>longitude</code> (decimal) - Collection site longitude</li>
-                            <li><code>formation_id</code> (integer) - Foreign key to geological_formations</li>
-                        </ul>
                         <strong style="display: block; margin-top: 1rem;">Sample Data:</strong>
                         <table style="margin-top: 0.5rem;">
                             <thead>
@@ -581,15 +559,6 @@
                     <h3>Table: mineral_deposits</h3>
                     <div class="schema-info">
                         <strong>Description:</strong> Known mineral deposit locations
-                        <br><strong>Columns:</strong>
-                        <ul>
-                            <li><code>deposit_id</code> (integer) - Unique deposit identifier</li>
-                            <li><code>mineral_name</code> (text) - Primary mineral (gold, copper, iron, etc.)</li>
-                            <li><code>deposit_type</code> (text) - Type of deposit (vein, placer, porphyry)</li>
-                            <li><code>estimated_volume_m3</code> (decimal) - Estimated volume in cubic meters</li>
-                            <li><code>site_name</code> (text) - Location name</li>
-                            <li><code>geom</code> (geometry) - PostGIS polygon geometry</li>
-                        </ul>
                         <strong style="display: block; margin-top: 1rem;">Sample Data:</strong>
                         <table style="margin-top: 0.5rem;">
                             <thead>
