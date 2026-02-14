@@ -154,24 +154,58 @@
         }
 
         .exercise-box {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
             padding: 1.5rem;
             margin: 1.5rem 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .exercise-box:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #3498db;
         }
 
         .exercise-box h4 {
             color: #2c3e50;
             margin-bottom: 1rem;
+            font-size: 1.15rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
         }
 
         .schema-info {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 1rem;
+            background: linear-gradient(to right, #fff3cd, #fffaeb);
+            border-left: 5px solid #ffc107;
+            padding: 1.25rem;
             margin: 1rem 0;
-            border-radius: 4px;
+            border-radius: 6px;
+            box-shadow: 0 2px 6px rgba(255, 193, 7, 0.15);
+        }
+
+        .schema-info strong {
+            color: #856404;
+        }
+
+        .schema-info ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .schema-info li {
+            margin: 0.3rem 0;
+            color: #533f03;
+        }
+
+        .schema-info code {
+            background: rgba(255, 193, 7, 0.15);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #533f03;
+            font-weight: 600;
         }
 
         .query-editor {
@@ -234,38 +268,65 @@
 
         .results-area {
             margin: 1.5rem 0;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 4px;
+            padding: 1.5rem;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+            border-radius: 8px;
             border: 1px solid #dee2e6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
 
         .results-area h4 {
             margin-bottom: 1rem;
             color: #2c3e50;
+            font-size: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 2px solid #34495e;
         }
 
         th {
-            background: #34495e;
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
             color: white;
-            padding: 0.75rem;
+            padding: 1rem 0.75rem;
             text-align: left;
             font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border: 1px solid #1a252f;
         }
 
         td {
-            padding: 0.75rem;
-            border-bottom: 1px solid #dee2e6;
+            padding: 1rem 0.75rem;
+            border: 1px solid #dee2e6;
+            color: #2c3e50;
+            font-size: 0.95rem;
         }
 
-        tr:hover {
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:nth-child(even) {
             background: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background: #e3f2fd;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 1px solid #dee2e6;
         }
 
         .code {
@@ -288,12 +349,14 @@
         }
 
         .success-message {
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
-            padding: 1rem;
-            border-radius: 4px;
-            border: 1px solid #c3e6cb;
+            padding: 1rem 1.25rem;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
             margin: 1rem 0;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(40, 167, 69, 0.1);
         }
 
         .error-message {
@@ -413,6 +476,48 @@
                             <li><code>longitude</code> (decimal) - Geographic longitude</li>
                             <li><code>geom</code> (geometry) - PostGIS point geometry</li>
                         </ul>
+                        <strong style="display: block; margin-top: 1rem;">Sample Data:</strong>
+                        <table style="margin-top: 0.5rem;">
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>location</th>
+                                    <th>magnitude</th>
+                                    <th>depth_km</th>
+                                    <th>event_date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Pacific Ocean, Japan</td>
+                                    <td>8.9</td>
+                                    <td>32.0</td>
+                                    <td>2011-03-11</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Chile Coast</td>
+                                    <td>8.2</td>
+                                    <td>25.0</td>
+                                    <td>2014-04-01</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Nepal</td>
+                                    <td>7.8</td>
+                                    <td>15.0</td>
+                                    <td>2015-04-25</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Indonesia</td>
+                                    <td>7.5</td>
+                                    <td>10.0</td>
+                                    <td>2018-09-28</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <h3>Table: rock_samples</h3>
@@ -428,6 +533,49 @@
                             <li><code>longitude</code> (decimal) - Collection site longitude</li>
                             <li><code>formation_id</code> (integer) - Foreign key to geological_formations</li>
                         </ul>
+                        <strong style="display: block; margin-top: 1rem;">Sample Data:</strong>
+                        <table style="margin-top: 0.5rem;">
+                            <thead>
+                                <tr>
+                                    <th>sample_id</th>
+                                    <th>rock_type</th>
+                                    <th>age_million_years</th>
+                                    <th>collection_date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>RS-001</td>
+                                    <td>Granite</td>
+                                    <td>450.5</td>
+                                    <td>2023-01-15</td>
+                                </tr>
+                                <tr>
+                                    <td>RS-002</td>
+                                    <td>Basalt</td>
+                                    <td>65.2</td>
+                                    <td>2023-02-20</td>
+                                </tr>
+                                <tr>
+                                    <td>RS-003</td>
+                                    <td>Limestone</td>
+                                    <td>300.0</td>
+                                    <td>2023-03-10</td>
+                                </tr>
+                                <tr>
+                                    <td>RS-004</td>
+                                    <td>Sandstone</td>
+                                    <td>180.7</td>
+                                    <td>2023-04-05</td>
+                                </tr>
+                                <tr>
+                                    <td>RS-005</td>
+                                    <td>Shale</td>
+                                    <td>420.3</td>
+                                    <td>2023-05-12</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <h3>Table: mineral_deposits</h3>
@@ -442,6 +590,48 @@
                             <li><code>site_name</code> (text) - Location name</li>
                             <li><code>geom</code> (geometry) - PostGIS polygon geometry</li>
                         </ul>
+                        <strong style="display: block; margin-top: 1rem;">Sample Data:</strong>
+                        <table style="margin-top: 0.5rem;">
+                            <thead>
+                                <tr>
+                                    <th>deposit_id</th>
+                                    <th>mineral_name</th>
+                                    <th>deposit_type</th>
+                                    <th>estimated_volume_m3</th>
+                                    <th>site_name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Gold</td>
+                                    <td>Vein</td>
+                                    <td>50,000</td>
+                                    <td>Sierra Nevada Mine</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Copper</td>
+                                    <td>Porphyry</td>
+                                    <td>2,500,000</td>
+                                    <td>Andes Deposit</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Iron</td>
+                                    <td>Banded Iron Formation</td>
+                                    <td>10,000,000</td>
+                                    <td>Superior Range</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Silver</td>
+                                    <td>Vein</td>
+                                    <td>35,000</td>
+                                    <td>Rocky Mountain Lode</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <p>Ready to start querying? Click on "Basic SELECT Queries" in the sidebar to begin!</p>
