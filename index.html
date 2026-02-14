@@ -985,19 +985,25 @@ INNER JOIN table2 ON table1.column = table2.column;</div>
                     </div>
 
                     <h3>Basic PostGIS Functions</h3>
+                    
                     <div class="code">-- Create a point geometry
+
 ST_MakePoint(longitude, latitude)
 
 -- Calculate distance between two points (in meters)
+
 ST_Distance(geom1, geom2)
 
 -- Check if a point is within a polygon
+
 ST_Within(point_geom, polygon_geom)
 
 -- Get the area of a polygon (in square meters)
+
 ST_Area(polygon_geom)
 
 -- Create a buffer around a geometry
+
 ST_Buffer(geom, distance)</div>
 
                     <div class="exercise-box">
@@ -1046,22 +1052,33 @@ ST_Buffer(geom, distance)</div>
                 title: 'Spatial Queries',
                 content: `
                     <h2>Spatial Queries with PostGIS</h2>
-                    <p>Now we'll use PostGIS functions to answer spatial questions about our geoscience data.</p>
+                    <p>Now we will use PostGIS functions to answer spatial questions about our geoscience data.</p>
 
                     <h3>Distance Calculations</h3>
                     <p>One of the most common spatial queries is calculating distances between features.</p>
 
                     <div class="code">-- Find earthquakes within 100km of a specific point
+
 SELECT location, magnitude,
+       
        ST_Distance(
+           
            geom,
+           
            ST_MakePoint(longitude, latitude)::geography
+       
        ) / 1000 as distance_km
+
 FROM earthquakes
+
 WHERE ST_Distance(
+    
     geom,
+    
     ST_MakePoint(target_lon, target_lat)::geography
+
 ) < 100000
+
 ORDER BY distance_km;</div>
 
                     <div class="exercise-box">
@@ -1151,22 +1168,33 @@ ORDER BY distance_km;</div>
                     <h3>Spatial Joins</h3>
                     <p>Find which features from one table intersect or are contained within features from another table.</p>
 
-                    <div class="code">-- Find rock samples within mineral deposit areas
+                    <div class="code">-- Find rock samples within mineral deposit areas:
+
 SELECT rs.sample_id, rs.rock_type, md.site_name, md.mineral_name
+
 FROM rock_samples rs
+
 JOIN mineral_deposits md
+  
   ON ST_Within(
+      
       ST_MakePoint(rs.longitude, rs.latitude),
+      
       md.geom
+  
   );</div>
 
                     <h3>Buffer Analysis</h3>
                     <p>Create buffer zones around features to analyze proximity.</p>
 
-                    <div class="code">-- Create 50km buffer around earthquake epicenters
+                    <div class="code">-- Create 50km buffer around earthquake epicenters:
+
 SELECT location, magnitude,
+       
        ST_Buffer(geom::geography, 50000) as buffer_geom
+
 FROM earthquakes
+
 WHERE magnitude > 7.0;</div>
 
                     <div class="exercise-box">
